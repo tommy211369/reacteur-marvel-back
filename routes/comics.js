@@ -18,10 +18,8 @@ router.get("/comics", async (req, res) => {
 // get comics list containing a specific character
 router.get("/comics/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/comics/${id}?apiKey=${process.env.API_KEY}`
+      `https://lereacteur-marvel-api.herokuapp.com/comics/${req.params.id}?apiKey=${process.env.API_KEY}`
     );
 
     res.status(200).json(response.data);
