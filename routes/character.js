@@ -15,7 +15,7 @@ router.get("/characters", async (req, res) => {
     // list of characters from Le Reacteur API
     const CHARACTERS = response.data.results;
 
-    // character name filter
+    // characters name filter
     res.json(
       CHARACTERS.map((character) => {
         if (character.name.search(regName) === -1) {
