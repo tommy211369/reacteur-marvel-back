@@ -22,7 +22,7 @@ fetchCharacters();
 // get all characters
 router.get("/characters", async (req, res) => {
   try {
-    let { title, page } = req.query.title;
+    let { title, page } = req.query;
 
     let filters = {};
 
