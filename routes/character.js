@@ -19,10 +19,10 @@ router.get("/characters", async (req, res) => {
       (character) => character.name === characterName
     );
 
-    console.log(characters);
-    res.status(200).json({ list: characters });
+    console.log(characters); // undefined
+    res.status(200).json({ list: characters }); // {}
+    // res.status(200).json(CHARACTERS); // all characters
   } catch (error) {
-    // console.log({ errorCharactersRouteMessage: error.message });
     res.status(400).json({ errorCharactersRouteMessage: error.message });
   }
 });
