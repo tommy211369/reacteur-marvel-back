@@ -5,7 +5,7 @@ const axios = require("axios");
 // get all characters
 router.get("/characters", async (req, res) => {
   try {
-    let characterName = new RegExp("Abyss", "i");
+    let name = new RegExp("Abyss", "i");
 
     const response = await axios.get(
       `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}`
@@ -13,15 +13,16 @@ router.get("/characters", async (req, res) => {
 
     // list of characters from Le Reacteur API
     const CHARACTERS = response.data.results;
-    console.log("Characters from API : ", CHARACTERS);
 
-    const characters = await CHARACTERS.find(
-      (character) => character.name === characterName
+    // character name filter
+    res.json(
+      CHARACTERS.map((character) => {
+        if (character.name.search(name) === -1) {
+          return null;
+        }
+        return character;
+      }).filter((elem) => elem !== null)
     );
-
-    console.log(characters); // undefined
-    res.status(200).json({ list: characters }); // {}
-    // res.status(200).json(CHARACTERS); // all characters
   } catch (error) {
     res.status(400).json({ errorCharactersRouteMessage: error.message });
   }
