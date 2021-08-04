@@ -5,7 +5,8 @@ const axios = require("axios");
 // get all characters
 router.get("/characters", async (req, res) => {
   try {
-    let name = new RegExp("Abyss", "i");
+    let name = req.query.name;
+    let regName = new RegExp(name, "i");
 
     const response = await axios.get(
       `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}`
@@ -17,7 +18,7 @@ router.get("/characters", async (req, res) => {
     // character name filter
     res.json(
       CHARACTERS.map((character) => {
-        if (character.name.search(name) === -1) {
+        if (character.name.search(regName) === -1) {
           return null;
         }
         return character;
