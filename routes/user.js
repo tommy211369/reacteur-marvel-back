@@ -80,7 +80,9 @@ router.post("/user/favorites", isAuthenticated, async (req, res) => {
     const user = await User.findOne({ username: itemId.userName });
 
     // if (user.favorites.indexOf(itemId) !== -1) {
-    user.favorites.push({ type: itemType, id: itemId, title: itemTitle });
+    user.favorites.push({
+      itemId: { type: itemType, title: itemTitle, userName: userName },
+    });
     await user.save();
     res.status(200).json({ message: `Item add to ${userName} favorites` });
     // } else {
