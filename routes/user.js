@@ -3,6 +3,7 @@ const router = express.Router();
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
+const cloudinary = require("cloudinary").v2;
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const User = require("../models/User");
@@ -75,7 +76,7 @@ router.post("/login", async (req, res) => {
 // post favorites
 router.post("/user/favorites", isAuthenticated, async (req, res) => {
   try {
-    let { itemId, itemType, itemTitle, userName } = req.fields;
+    let { itemId, itemType, itemTitle, userName, itemPicture } = req.fields;
 
     const user = await User.findOne({ username: userName });
 
@@ -90,7 +91,9 @@ router.post("/user/favorites", isAuthenticated, async (req, res) => {
         type: itemType,
         title: itemTitle,
         userName: userName,
+        image: itemPicture,
       });
+
       await user.save();
       res
         .status(200)
@@ -98,9 +101,7 @@ router.post("/user/favorites", isAuthenticated, async (req, res) => {
     } else {
       // remove from favorites
       user.favorites.splice(index, 1);
-
       await user.save();
-
       res
         .status(200)
         .json({ message: `Item remove from ${userName} favorites`, num: 2 });
@@ -123,6 +124,30 @@ router.get("/favorites", async (req, res) => {
     res
       .status(200)
       .json({ message: `${user.username} favorites`, userFavorites });
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
+});
+
+// remove item from favorites
+router.delete("/favorites/delete", async (req, res) => {
+  try {
+    let userName = req.query.user;
+    let itemId = req.query.id;
+
+    const user = await User.findOne({ username: userName });
+
+    // exist : item already in DB
+    const exist = user.favorites.find((elem) => elem.id === itemId);
+    // index : index of this item in user.favorites array
+    const index = user.favorites.indexOf(exist);
+
+    user.favorites.splice(index, 1);
+    await user.save();
+
+    res.status(200).json({ message: `Item remove from ${userName} favorites` });
+
+    res.status(200).json({ message: "Remove from favorites" });
   } catch (error) {
     res.status(400).json(error.message);
   }
