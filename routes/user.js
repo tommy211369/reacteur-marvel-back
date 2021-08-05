@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
         const resUser = {
           _id: user.id,
           token: user.token,
-          account: user.account,
+          username: user.username,
         };
 
         res.status(200).json({ message: "Logged in !", resUser: resUser });
