@@ -35,7 +35,7 @@ router.post("/signup", async (req, res) => {
         username: newUser.username,
       };
 
-      res.json({ message: "Signed up successfully", resNewUser });
+      res.status(200).json({ message: "Signed up successfully", resNewUser });
     }
   } catch (error) {
     res.status(400).json(error.message);

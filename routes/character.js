@@ -5,25 +5,41 @@ const axios = require("axios");
 // get all characters
 router.get("/characters", async (req, res) => {
   try {
+    let skip = req.query.skip;
+
     let name = req.query.name;
     let regName = new RegExp(name, "i");
 
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}`
+      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&skip=${skip}`
     );
 
     // list of characters from Le Reacteur API
-    const CHARACTERS = response.data.results;
+    const characters = response.data.results;
+    // const CHARACTERS = [];
 
     // characters name filter
-    res.json(
-      CHARACTERS.map((character) => {
-        if (character.name.search(regName) === -1) {
-          return null;
-        }
-        return character;
-      }).filter((elem) => elem !== null)
+    res.status(200).json(
+      characters
+        .map((character) => {
+          if (character.name.search(regName) === -1) {
+            return null;
+          }
+          return character;
+        })
+        .filter((elem) => elem !== null)
     );
+
+    // characters
+    //   .map((character) => {
+    //     if (character.name.search(regName) === -1) {
+    //       return null;
+    //     }
+    //     return CHARACTERS.push(character);
+    //   })
+    //   .filter((elem) => elem !== null);
+
+    // res.json(CHARACTERS);
   } catch (error) {
     res.status(400).json({ errorCharactersRouteMessage: error.message });
   }

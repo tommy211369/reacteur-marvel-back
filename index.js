@@ -17,8 +17,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 // routes import
 const characterRoutes = require("./routes/character");
 const comicsRoutes = require("./routes/comics");
+const userRoutes = require("./routes/user");
 app.use(characterRoutes);
 app.use(comicsRoutes);
+app.use(userRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome on Marvel API !" });
