@@ -72,17 +72,32 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// favorites
+// post favorites
 router.post("/user/favorites", isAuthenticated, async (req, res) => {
   try {
     let { itemType, itemId, itemTitle, userName } = req.fields;
 
     const user = await User.findOne({ username: userName });
 
-    user.favorites.push({ type: itemType, id: itemId, title: itemTitle });
+    if (user.favorites.indexOf(itemId) === -1) {
+      user.favorites.push({ type: itemType, id: itemId, title: itemTitle });
+      await user.save();
+      res.status(200).json({ message: `Item add to ${userName} favorites` });
+    } else {
+      res.status(200).json({ message: `Item already in your favorites` });
+    }
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
+});
 
-    await user.save();
-    res.status(200).json({ message: `Item add to ${userName} favorites` });
+// get favorites
+
+router.get("/user/favorites", async (req, res) => {
+  try {
+    let token = req.query.token;
+
+    const user = await User.findOne({ token: token });
   } catch (error) {
     res.status(400).json(error.message);
   }
