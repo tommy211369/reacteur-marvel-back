@@ -79,7 +79,10 @@ router.post("/user/favorites", isAuthenticated, async (req, res) => {
 
     const user = await User.findOne({ username: userName });
 
-    const exist = user.favorites((elem) => elem.id === itemId);
+    // exist : item already in DB
+    const exist = user.favorites.find((elem) => elem.id === itemId);
+    // index : index of this item
+    const index = user.favorites.indexOf(exist);
 
     if (!exist) {
       user.favorites.push({
@@ -93,22 +96,33 @@ router.post("/user/favorites", isAuthenticated, async (req, res) => {
         .status(200)
         .json({ message: `Item add to ${userName} favorites`, num: 1 });
     } else {
+      // remove from favorites
+      user.favorites.splice(index, 1);
+
+      await user.save();
+
       res
         .status(200)
-        .json({ message: `Item already in ${userName} favorites`, num: 1 });
+        .json({ message: `Item remove from ${userName} favorites`, num: 2 });
     }
   } catch (error) {
     res.status(400).json(error.message);
   }
 });
 
-// get favorites
-
-router.get("/user/favorites", async (req, res) => {
+// get user favorites
+router.get("/favorites", async (req, res) => {
   try {
     let token = req.query.token;
 
     const user = await User.findOne({ token: token });
+
+    // userFavorites : get user favorites
+    const userFavorites = user.favorites;
+
+    res
+      .status(200)
+      .json({ message: `${user.username} favorites`, userFavorites });
   } catch (error) {
     res.status(400).json(error.message);
   }
