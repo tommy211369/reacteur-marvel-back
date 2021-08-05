@@ -75,11 +75,11 @@ router.post("/login", async (req, res) => {
 // post favorites
 router.post("/user/favorites", isAuthenticated, async (req, res) => {
   try {
-    let { itemType, itemId, itemTitle, userName } = req.fields;
+    let { itemId, itemType, itemTitle, userName } = req.fields;
 
-    const user = await User.findOne({ username: userName });
+    const user = await User.findOne({ username: itemId.userName });
 
-    if (user.favorites.indexOf(itemId) === -1) {
+    if (user.favorites.indexOf(itemId) !== -1) {
       user.favorites.push({ type: itemType, id: itemId, title: itemTitle });
       await user.save();
       res.status(200).json({ message: `Item add to ${userName} favorites` });
