@@ -3,6 +3,7 @@ const router = express.Router();
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const User = require("../models/User");
 
@@ -23,6 +24,7 @@ router.post("/signup", async (req, res) => {
       const newUser = await new User({
         email: req.fields.email,
         username: req.fields.username,
+        favorites: [],
         token: userToken,
         hash: userHash,
         salt: userSalt,
@@ -65,6 +67,22 @@ router.post("/login", async (req, res) => {
     } else {
       res.status(401).json({ message: "Unauthorized : user not recognized" });
     }
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
+});
+
+// favorites
+router.post("/user/favorites", isAuthenticated, async (req, res) => {
+  try {
+    let { itemType, itemId, itemTitle, userName } = req.fields;
+
+    const user = await User.findOne({ username: userName });
+
+    user.favorites.push({ type: itemType, id: itemId, title: itemTitle });
+
+    await user.save();
+    res.status(200).json({ message: `Item add to ${userName} favorites` });
   } catch (error) {
     res.status(400).json(error.message);
   }
