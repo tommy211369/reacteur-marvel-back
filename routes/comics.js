@@ -7,20 +7,22 @@ router.get("/comics", async (req, res) => {
   try {
     let title = req.query.title;
     let regTitle = new RegExp(title, "i");
+    let skip = req.query.skip;
 
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/comics?apiKey=${process.env.API_KEY}`
+      `https://lereacteur-marvel-api.herokuapp.com/comics?apiKey=${process.env.API_KEY}&limit=20&skip=${skip}`
     );
 
     // list of comics from Le Reacteur API
     const COMICS = response.data.results;
 
     //comics title filter
-    res.json(
-      COMICS.filter((comics) => {
+    res.json({
+      count: response.data.count,
+      comics: COMICS.filter((comics) => {
         return comics.title.search(regTitle) > -1 && comics;
-      })
-    );
+      }),
+    });
 
     // res.status(200).json(response.data.results);
   } catch (error) {

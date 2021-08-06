@@ -11,24 +11,26 @@ router.get("/characters", async (req, res) => {
     let regName = new RegExp(name, "i");
 
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&skip=${skip}`
+      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&skip=${skip}&limit=20`
     );
 
     // list of characters from Le Reacteur API
     const characters = response.data.results;
     // const CHARACTERS = [];
 
-    // characters name filter
-    res.status(200).json(
-      characters
+    // response
+    res.status(200).json({
+      count: response.data.count,
+
+      characters: characters
         .map((character) => {
           if (character.name.search(regName) === -1) {
             return null;
           }
           return character;
         })
-        .filter((elem) => elem !== null)
-    );
+        .filter((elem) => elem !== null),
+    });
 
     // characters
     //   .map((character) => {
