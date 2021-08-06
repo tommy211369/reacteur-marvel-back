@@ -11,7 +11,7 @@ router.get("/characters", async (req, res) => {
     let regName = new RegExp(name, "i");
 
     const response = await axios.get(
-      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&skip=${skip}&limit=20`
+      `https://lereacteur-marvel-api.herokuapp.com/characters?apiKey=${process.env.API_KEY}&skip=${skip}&limit=100`
     );
 
     // list of characters from Le Reacteur API
