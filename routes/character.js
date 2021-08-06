@@ -16,9 +16,8 @@ router.get("/characters", async (req, res) => {
 
     // list of characters from Le Reacteur API
     const characters = response.data.results;
-    // const CHARACTERS = [];
 
-    // response
+    // filter by name
     res.status(200).json({
       count: response.data.count,
 
@@ -31,17 +30,6 @@ router.get("/characters", async (req, res) => {
         })
         .filter((elem) => elem !== null),
     });
-
-    // characters
-    //   .map((character) => {
-    //     if (character.name.search(regName) === -1) {
-    //       return null;
-    //     }
-    //     return CHARACTERS.push(character);
-    //   })
-    //   .filter((elem) => elem !== null);
-
-    // res.json(CHARACTERS);
   } catch (error) {
     res.status(400).json({ errorCharactersRouteMessage: error.message });
   }

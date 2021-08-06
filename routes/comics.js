@@ -16,17 +16,13 @@ router.get("/comics", async (req, res) => {
     // list of comics from Le Reacteur API
     const COMICS = response.data.results;
 
-    // comics title filter
+    // filter by title
     res.json({
       count: response.data.count,
       comics: COMICS.filter((comics) => {
         return comics.title.search(regTitle) > -1 && comics;
       }),
     });
-
-    // res.json({ count: response.data.count, comics: response.data.results });
-
-    // res.status(200).json(response.data.results);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
