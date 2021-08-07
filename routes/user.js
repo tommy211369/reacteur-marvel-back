@@ -38,6 +38,7 @@ router.post("/signup", async (req, res) => {
         username: newUser.username,
       };
 
+      console.log({ message: "Signed up successfully", resNewUser });
       res.status(200).json({ message: "Signed up successfully", resNewUser });
     }
   } catch (error) {
@@ -61,14 +62,18 @@ router.post("/login", async (req, res) => {
           username: user.username,
         };
 
+        console.log({ message: "Logged in !", resUser: resUser });
         res.status(200).json({ message: "Logged in !", resUser: resUser });
       } else {
+        console.log({ message: "Wrong password" });
         res.status(400).json({ message: "Wrong password" });
       }
     } else {
+      console.log({ message: "Unauthorized : user not recognized" });
       res.status(401).json({ message: "Unauthorized : user not recognized" });
     }
   } catch (error) {
+    console.log(error.message);
     res.status(400).json(error.message);
   }
 });
@@ -146,8 +151,6 @@ router.delete("/favorites/delete", async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: `Item remove from ${userName} favorites` });
-
-    res.status(200).json({ message: "Remove from favorites" });
   } catch (error) {
     res.status(400).json(error.message);
   }
