@@ -18,6 +18,7 @@ router.get("/comics", async (req, res) => {
     // filter by title
     res.json({
       count: response.data.count,
+      com: response.data,
       comics: comics,
     });
   } catch (error) {
