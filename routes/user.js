@@ -16,6 +16,8 @@ router.post("/signup", async (req, res) => {
       res.status(409).json({ message: "User already exists" });
     } else if (req.fields.username === "") {
       res.status(400).json({ message: "Username is required" });
+    } else if (req.fields.password !== req.fields.confirm) {
+      res.status(401).json({ message: "Enter same password and confirmation" });
     } else {
       const password = req.fields.password;
       const userSalt = uid2(16);
@@ -38,11 +40,10 @@ router.post("/signup", async (req, res) => {
         username: newUser.username,
       };
 
-      console.log({ message: "Signed up successfully", resNewUser });
       res.status(200).json({ message: "Signed up successfully", resNewUser });
     }
   } catch (error) {
-    res.status(400).json(error.message);
+    res.status(400).json(error);
   }
 });
 
