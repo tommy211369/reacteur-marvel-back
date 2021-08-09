@@ -36,6 +36,7 @@ router.post("/signup", async (req, res) => {
       await newUser.save();
 
       const resNewUser = {
+        id: newUser._id,
         token: newUser.token,
         username: newUser.username,
       };
@@ -58,7 +59,7 @@ router.post("/login", async (req, res) => {
 
       if (newHash === user.hash) {
         const resUser = {
-          _id: user.id,
+          id: user._id,
           token: user.token,
           username: user.username,
         };
@@ -138,10 +139,10 @@ router.get("/favorites", async (req, res) => {
 // remove item from favorites
 router.delete("/favorites/delete", async (req, res) => {
   try {
-    let userName = req.query.user;
+    let userId = req.query.user;
     let itemId = req.query.id;
 
-    const user = await User.findOne({ username: userName });
+    const user = await User.findOne({ _id: userId });
 
     // exist : item already in DB
     const exist = user.favorites.find((elem) => elem.id === itemId);
@@ -151,7 +152,9 @@ router.delete("/favorites/delete", async (req, res) => {
     user.favorites.splice(index, 1);
     await user.save();
 
-    res.status(200).json({ message: `Item remove from ${userName} favorites` });
+    res
+      .status(200)
+      .json({ message: `Item remove from ${user.username} favorites` });
   } catch (error) {
     res.status(400).json(error.message);
   }
