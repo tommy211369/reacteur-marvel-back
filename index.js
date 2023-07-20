@@ -31,7 +31,7 @@ app.use(comicsRoutes);
 app.use(userRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome on Marvel API !" });
+  res.json({ message: "Welcome on Marvel API by Tommy Thongrasamy !" });
 });
 
 app.all("*", (req, res) => {
